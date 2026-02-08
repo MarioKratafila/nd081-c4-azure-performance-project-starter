@@ -1,0 +1,216 @@
+az network lb inbound-nat-pool create \
+  --resource-group acdnd-c4-project \
+  --lb-name udacity-vmss-lb \
+  --name vmssNatPool \
+  --protocol Tcp \
+  --frontend-port-range-start 50000 \
+  --frontend-port-range-end 50100 \
+  --backend-port 22
+
+{
+  "backendPort": 22,
+  "enableFloatingIP": false,
+  "enableTcpReset": false,
+  "etag": "W/\"8485bc5b-b1f7-4b8d-9ee1-33237f9772c0\"",
+  "frontendIPConfiguration": {
+    "id": "/subscriptions/91272e0a-6e58-460e-98de-ca4a862c7a08/resourceGroups/acdnd-c4-project/providers/Microsoft.Network/loadBalancers/udacity-vmss-lb/frontendIPConfigurations/loadBalancerFrontEnd",
+    "resourceGroup": "acdnd-c4-project"
+  },
+  "frontendPortRangeEnd": 50100,
+  "frontendPortRangeStart": 50000,
+  "id": "/subscriptions/91272e0a-6e58-460e-98de-ca4a862c7a08/resourceGroups/acdnd-c4-project/providers/Microsoft.Network/loadBalancers/udacity-vmss-lb/inboundNatPools/vmssNatPool",
+  "idleTimeoutInMinutes": 4,
+  "name": "vmssNatPool",
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "acdnd-c4-project",
+  "type": "Microsoft.Network/loadBalancers/inboundNatPools"
+}
+
+
+az vmss update \
+  --resource-group acdnd-c4-project \
+  --name udacity-vmss \
+  --set virtualMachineProfile.networkProfile.networkInterfaceConfigurations[0].ipConfigurations[0].loadBalancerInboundNatPools="[{\"id\":\"/subscriptions/91272e0a-6e58-460e-98de-ca4a862c7a08/resourceGroups/acdnd-c4-project/providers/Microsoft.Network/loadBalancers/udacity-vmss-lb/inboundNatPools/vmssNatPool\"}]"
+
+{
+  "additionalCapabilities": null,
+  "automaticRepairsPolicy": null,
+  "constrainedMaximumCapacity": null,
+  "doNotRunExtensionsOnOverprovisionedVMs": false,
+  "etag": "\"5\"",
+  "extendedLocation": null,
+  "hostGroup": null,
+  "id": "/subscriptions/91272e0a-6e58-460e-98de-ca4a862c7a08/resourceGroups/acdnd-c4-project/providers/Microsoft.Compute/virtualMachineScaleSets/udacity-vmss",
+  "identity": null,
+  "location": "westus",
+  "name": "udacity-vmss",
+  "orchestrationMode": "Uniform",
+  "overprovision": true,
+  "plan": null,
+  "platformFaultDomainCount": 5,
+  "priorityMixPolicy": null,
+  "provisioningState": "Succeeded",
+  "proximityPlacementGroup": null,
+  "resiliencyPolicy": null,
+  "resourceGroup": "acdnd-c4-project",
+  "scaleInPolicy": null,
+  "scheduledEventsPolicy": null,
+  "singlePlacementGroup": true,
+  "sku": {
+    "capacity": 2,
+    "name": "Standard_B1s",
+    "tier": "Standard"
+  },
+  "skuProfile": null,
+  "spotRestorePolicy": null,
+  "tags": {},
+  "timeCreated": "2026-02-02T18:35:01.016928+00:00",
+  "type": "Microsoft.Compute/virtualMachineScaleSets",
+  "uniqueId": "81ed66d0-1f3f-4c87-87ad-907f67ac4b7e",
+  "upgradePolicy": {
+    "automaticOsUpgradePolicy": null,
+    "mode": "Automatic",
+    "rollingUpgradePolicy": null
+  },
+  "virtualMachineProfile": {
+    "applicationProfile": null,
+    "billingProfile": null,
+    "capacityReservation": null,
+    "diagnosticsProfile": null,
+    "evictionPolicy": null,
+    "extensionProfile": null,
+    "hardwareProfile": null,
+    "licenseType": null,
+    "networkProfile": {
+      "healthProbe": null,
+      "networkApiVersion": null,
+      "networkInterfaceConfigurations": [
+        {
+          "auxiliaryMode": null,
+          "auxiliarySku": null,
+          "deleteOption": null,
+          "disableTcpStateTracking": false,
+          "dnsSettings": {
+            "dnsServers": []
+          },
+          "enableAcceleratedNetworking": null,
+          "enableFpga": null,
+          "enableIpForwarding": false,
+          "ipConfigurations": [
+            {
+              "applicationGatewayBackendAddressPools": null,
+              "applicationSecurityGroups": null,
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "/subscriptions/91272e0a-6e58-460e-98de-ca4a862c7a08/resourceGroups/acdnd-c4-project/providers/Microsoft.Network/loadBalancers/udacity-vmss-lb/backendAddressPools/udacity-vmss-bepool",
+                  "resourceGroup": "acdnd-c4-project"
+                }
+              ],
+              "loadBalancerInboundNatPools": [
+                {
+                  "id": "/subscriptions/91272e0a-6e58-460e-98de-ca4a862c7a08/resourceGroups/acdnd-c4-project/providers/Microsoft.Network/loadBalancers/udacity-vmss-lb/inboundNatPools/vmssNatPool",
+                  "resourceGroup": "acdnd-c4-project"
+                }
+              ],
+              "name": "udaci5bf9IPConfig",
+              "primary": null,
+              "privateIpAddressVersion": "IPv4",
+              "publicIpAddressConfiguration": null,
+              "subnet": {
+                "id": "/subscriptions/91272e0a-6e58-460e-98de-ca4a862c7a08/resourceGroups/acdnd-c4-project/providers/Microsoft.Network/virtualNetworks/udacity-vmssVNET/subnets/udacity-vmssSubnet",
+                "resourceGroup": "acdnd-c4-project"
+              }
+            }
+          ],
+          "name": "udaci5bf9Nic",
+          "networkSecurityGroup": null,
+          "primary": true
+        }
+      ]
+    },
+    "osProfile": {
+      "adminPassword": null,
+      "adminUsername": "udacityadmin",
+      "allowExtensionOperations": true,
+      "computerNamePrefix": "udaci5bf9",
+      "customData": null,
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "enableVmAgentPlatformUpdates": null,
+        "patchSettings": null,
+        "provisionVmAgent": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCYN0kF9f7YTnLp67fVfd5df5MlrrWluYIMDhwm0rNj5+791rH8WZlChF4MvmNTzV+fY2YUv2EBTmuHPLsmyhqb2riYRyowBuHXIR+EWeDjmqeN4Q60jAnJl68ElHEQiCLFcpPfUogD7G5o+hui5c/iE2/ZXTFFimoQIw2edJWyO3SAAIA8ZdxOmTtnMrKubWyc03RWCOzFEUJ1XFUjsyqj678ll/z37wEl6k8+V6XFX/ETn3Jz8M+GpUiuKtnL8oC0KZIR1rUBnuylHeCmKBvrYQN8qS8OzbGvBrtFfoMttXOLVkidLWfyRA/8D7TlSXkkPKsiIfRBJkVFCwY9q0P/",
+              "path": "/home/udacityadmin/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "requireGuestProvisionSignal": true,
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "priority": null,
+    "scheduledEventsProfile": null,
+    "securityPostureReference": null,
+    "securityProfile": {
+      "encryptionAtHost": null,
+      "encryptionIdentity": null,
+      "proxyAgentSettings": null,
+      "securityType": "TrustedLaunch",
+      "uefiSettings": {
+        "secureBootEnabled": true,
+        "vTpmEnabled": true
+      }
+    },
+    "serviceArtifactReference": null,
+    "storageProfile": {
+      "dataDisks": null,
+      "diskControllerType": "SCSI",
+      "imageReference": {
+        "communityGalleryImageId": null,
+        "exactVersion": null,
+        "id": null,
+        "offer": "0001-com-ubuntu-server-jammy",
+        "publisher": "Canonical",
+        "sharedGalleryImageId": null,
+        "sku": "22_04-lts-gen2",
+        "version": "latest"
+      },
+      "osDisk": {
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "deleteOption": null,
+        "diffDiskSettings": null,
+        "diskSizeGb": 30,
+        "image": null,
+        "managedDisk": {
+          "diskEncryptionSet": null,
+          "securityProfile": null,
+          "storageAccountType": "Premium_LRS"
+        },
+        "name": null,
+        "osType": "Linux",
+        "vhdContainers": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "timeCreated": "2026-02-02T18:45:23.887267+00:00",
+    "userData": null
+  },
+  "zonalPlatformFaultDomainAlignMode": null,
+  "zoneBalance": null,
+  "zones": null
+}
+
+az vmss list-instance-connection-info \
+  --resource-group acdnd-c4-project \
+  --name udacity-vmss
+
+{
+  "instance 1": "104.42.153.65:50000",
+  "instance 3": "104.42.153.65:50001"
+}

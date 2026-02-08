@@ -1,0 +1,44 @@
+each server:
+
+ssh udacityadmin@ip.address -p 50000
+sudo apt update
+sudo apt install python3.11
+python3 --version
+sudo apt install -y python3-pip
+pip3 --version 
+sudo -H pip3 install --upgrade pip
+cd
+wget https://download.redis.io/releases/redis-6.2.4.tar.gz
+tar xzf redis-6.2.4.tar.gz
+cd redis-6.2.4
+make
+
+cd src
+./redis-server &
+./redis-cli ping
+
+cd
+git clone https://github.com/udacity/azure-voting-app-redis.git
+cd azure-voting-app-redis/
+git checkout Deploy_to_VMSS
+
+pip install -r requirements.txt
+
+sudo nano /etc/systemd/system/vote.service
+Content-------------------------
+[Unit]
+Description=Python Vote App
+
+[Service]
+ExecStart=/usr/bin/python3 /home/udacityadmin/nd081-c4-azure-performance-project-starter/azure-vote/main.py
+WorkingDirectory=/home/udacityadmin/nd081-c4-azure-performance-project-starter/azure-vote
+Restart=always
+User=udacityadmin
+
+[Install]
+WantedBy=multi-user.target
+Content End----------------------
+
+sudo systemctl daemon-reload
+sudo systemctl enable myapp
+sudo systemctl start myapp

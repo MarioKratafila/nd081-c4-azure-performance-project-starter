@@ -8,5 +8,6 @@ RUN pip install --no-cache-dir opencensus-ext-flask==0.8.1
 RUN pip install --no-cache-dir opencensus-ext-logging==0.1.1
 RUN pip install --no-cache-dir Flask==2.3.3
 RUN pip install --no-cache-dir Werkzeug==2.3.7
+RUN pip install --no-cache-dir opencensus-ext-requests==0.8.0
 # Copy the content of the current directory to the /app of the container
 ADD . /app
